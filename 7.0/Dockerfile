@@ -201,6 +201,8 @@ RUN a2enmod \
     status \
     ssl
 
+RUN sed -i 's/AllowOverride\ None/AllowOverride\ All/g' /etc/apache2/apache2.conf
+
 # Install composer (latest version) | prestissimo to speed up composer
 RUN curl -sS https://getcomposer.org/installer | php && \
     mv composer.phar /usr/local/bin/composer && \
