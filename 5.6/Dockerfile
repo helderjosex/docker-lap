@@ -221,6 +221,25 @@ RUN curl https://drupalconsole.com/installer -L -o drupal.phar && \
   chmod +x /usr/local/bin/drupal  && \
   drupal self-update
 
+### Install PHP CodeSniffer ###
+RUN curl -OL https://squizlabs.github.io/PHP_CodeSniffer/phpcs.phar && \
+  curl -OL https://squizlabs.github.io/PHP_CodeSniffer/phpcbf.phar && \
+  mv phpcs.phar /usr/local/bin/phpcs && \
+  mv phpcbf.phar /usr/local/bin/phpcbf && \
+  chmod +x /usr/local/bin/phpcs && \
+  chmod +x /usr/local/bin/phpcbf
+
+# Set some useful defaults to phpcs
+# show_progress - I like to see a progress while phpcs does its magic
+# colors - Enable colors; My terminal supports more than black and white
+# report_width - I am using a large display so I can afford a larger width
+# encoding - Unicode all the way
+
+RUN /usr/local/bin/phpcs --config-set show_progress 1 && \
+    /usr/local/bin/phpcs --config-set colors 1 && \
+    /usr/local/bin/phpcs --config-set report_width 140 && \
+    /usr/local/bin/phpcs --config-set encoding utf-8
+
 # Bash setup.
 RUN echo ". /usr/share/bash-completion/bash_completion" >> ~/.bashrc && echo "alias ll='ls -lahs'" >> ~/.bashrc
 
