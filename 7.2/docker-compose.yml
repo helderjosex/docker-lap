@@ -1,13 +1,25 @@
 version: '2'
 
 services:
-  docker-lap7-deb:
+  docker-lap72-deb:
     build: .
-    image: docker-lap7-deb:1.0
-    container_name: docker-lap7-deb
+    image: docker-lap72-deb:1.0
+    container_name: docker-lap72-deb
     ports:
-      - "8087:80"
-      - "4437:443"
+      - "8088:80"
+      - "443:443"
     restart: always
     volumes:
       - /home/helder/www:/var/www/html
+      - /home/helder/www/ssl:/etc/apache2/ssl
+      - /home/helder/www/sites-enabled:/etc/apache2/sites-enabled
+    extra_hosts:
+      - "www.local:127.0.0.1"
+      - "checkout.local:127.0.0.1"
+      - "novobusiness.local:127.0.0.1"
+      - "businessempresa.local:127.0.0.1"
+      - "sos.local:127.0.0.1"
+      - "ws.local:127.0.0.1"
+      - "campanha.local:127.0.0.1"
+      - "somos.local:127.0.0.1"
+      - "querocomprar.local:127.0.0.1"
