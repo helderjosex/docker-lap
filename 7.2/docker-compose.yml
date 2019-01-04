@@ -6,7 +6,7 @@ services:
     image: docker-lap72-deb:1.0
     container_name: docker-lap72-deb
     ports:
-      - "8088:80"
+      - "8072:80"
       - "443:443"
     restart: always
     volumes:
