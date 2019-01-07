@@ -6,7 +6,7 @@ services:
     image: docker-lap72-deb:1.0
     container_name: docker-lap72-deb
     ports:
-      - "8072:80"
+      - "80:80"
       - "443:443"
     restart: always
     volumes:
@@ -14,12 +14,4 @@ services:
       - /home/helder/www/ssl:/etc/apache2/ssl
       - /home/helder/www/sites-enabled:/etc/apache2/sites-enabled
     extra_hosts:
-      - "www.local:127.0.0.1"
-      - "checkout.local:127.0.0.1"
-      - "novobusiness.local:127.0.0.1"
-      - "businessempresa.local:127.0.0.1"
-      - "sos.local:127.0.0.1"
-      - "ws.local:127.0.0.1"
-      - "campanha.local:127.0.0.1"
-      - "somos.local:127.0.0.1"
-      - "querocomprar.local:127.0.0.1"
+      - "e-processo.local:127.0.0.1"
