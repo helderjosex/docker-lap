@@ -121,7 +121,6 @@ RUN sed -i -e "s/default_charset = \"UTF-8\"/default_charset = $DEFAULT_CHARSET/
 # PHP short tag
 RUN sed -i -e "s/short_open_tag = Off/short_open_tag = On/" /etc/php/7.2/apache2/php.ini
 
-
 # PHP xdebug
 RUN \
     wget https://github.com/xdebug/xdebug/archive/master.zip && \
@@ -244,20 +243,34 @@ RUN curl -sS https://getcomposer.org/installer | php && \
     mv composer.phar /usr/local/bin/composer && \
     composer global require "hirak/prestissimo:^0.3"
 
-### Install DRUSH (latest stable) ###
-# Run this in your terminal to get the latest DRUSH project version:
-RUN composer global require drush/drush && \
-    ~/.composer/vendor/bin/drush init
-
-### Install DRUPAL CONSOLE (latest version) ###
-# Run this in your terminal to get the latest project version:
-RUN curl https://drupalconsole.com/installer -L -o drupal.phar && \
-    mv drupal.phar /usr/local/bin/drupal && \
-    chmod +x /usr/local/bin/drupal  && \
-    drupal self-update
-
 # Bash setup.
 RUN echo ". /usr/share/bash-completion/bash_completion" >> ~/.bashrc && echo "alias ll='ls -lahs'" >> ~/.bashrc
+
+# Microsoft SQL Server Prerequisites
+RUN apt-get update && apt-get install -y --no-install-recommends apt-transport-https 
+RUN curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add -
+RUN curl https://packages.microsoft.com/config/ubuntu/16.04/prod.list > /etc/apt/sources.list.d/mssql-release.list
+RUN apt-get update
+RUN ACCEPT_EULA=Y apt-get install -y --no-install-recommends \
+        msodbcsql \
+        mssql-tools \
+        unixodbc-dev
+RUN echo 'export PATH="$PATH:/opt/mssql-tools/bin"' >> ~/.bash_profile && \
+    echo 'export PATH="$PATH:/opt/mssql-tools/bin"' >> ~/.bashrc && \
+    apt-get -y autoremove && \
+    rm -rf /var/lib/apt/lists/*
+
+# install Microsoft SQL Server Driver for PHP
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        g++ \
+        make && \
+        pecl install sqlsrv pdo_sqlsrv && \
+        echo "extension=sqlsrv.so" >> /etc/php/7.2/mods-available/sqlsrv.ini && \
+        echo "extension=pdo_sqlsrv.so" >> /etc/php/7.2/mods-available/pdo_sqlsrv.ini && \
+        phpenmod sqlsrv pdo_sqlsrv && \
+        apt-get -y remove g++ make && \
+        apt-get -y autoremove && \
+    rm -rf /var/lib/apt/lists/*
 
 #
 # Step 3: Clean the system
